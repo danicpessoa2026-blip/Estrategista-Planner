@@ -1,0 +1,27 @@
+{
+  "name": "A Estrategista · O Estrategista",
+  "short_name": "Estrategista",
+  "description": "Planner filosófico para mentes organizadas e almas poéticas",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FFF5F8",
+  "theme_color": "#B85C7A",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["productivity", "lifestyle"]
+}

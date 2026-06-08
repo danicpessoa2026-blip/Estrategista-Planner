@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Estrategista">
+<meta name="theme-color" id="themeColorMeta" content="#B85C7A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>A Estrategista · O Estrategista</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   RESET & ROOT
+════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+input, textarea, button { font-family: inherit; }
+
+/* ════════════════════════════════════════════
+   THEMES
+════════════════════════════════════════════ */
+:root {
+  --radius-card: 22px;
+  --radius-btn: 50px;
+  --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="fem"] {
+  --p:      #B85C7A;
+  --p-dark: #8E3A56;
+  --p-mid:  #D4848A;
+  --sec:    #E8A0B5;
+  --acc:    #FCE4EC;
+  --acc2:   #F8BBD0;
+  --bg:     #FFF5F8;
+  --bg2:    #FFF0F4;
+  --card:   #FFFFFF;
+  --txt:    #4A1942;
+  --txt2:   #7B3F6E;
+  --muted:  #C994B0;
+  --gold:   #D4A96A;
+  --goldl:  #FDF3E3;
+  --grad:   linear-gradient(135deg,#B85C7A 0%,#D4848A 40%,#E8A0B5 75%,#F5C6D0 100%);
+  --grad-s: linear-gradient(135deg,rgba(184,92,122,.12) 0%,rgba(232,160,181,.08) 100%);
+  --shad:   0 8px 32px rgba(184,92,122,.14), 0 2px 8px rgba(184,92,122,.07);
+  --shad-h: 0 14px 44px rgba(184,92,122,.24);
+  --bord:   rgba(184,92,122,.18);
+  --sched-now: rgba(184,92,122,.12);
+}
+
+[data-theme="masc"] {
+  --p:      #1E3A5F;
+  --p-dark: #0D1B2A;
+  --p-mid:  #2E6B9E;
+  --sec:    #4A86B8;
+  --acc:    #EEF2F7;
+  --acc2:   #D6E4F0;
+  --bg:     #F2F4F8;
+  --bg2:    #E8ECF3;
+  --card:   #FFFFFF;
+  --txt:    #0D1B2A;
+  --txt2:   #1E3A5F;
+  --muted:  #6B8CAE;
+  --gold:   #C9A84C;
+  --goldl:  #F5EDD0;
+  --grad:   linear-gradient(135deg,#0D1B2A 0%,#1E3A5F 40%,#2E6B9E 75%,#4A86B8 100%);
+  --grad-s: linear-gradient(135deg,rgba(30,58,95,.1) 0%,rgba(46,107,158,.06) 100%);
+  --shad:   0 8px 32px rgba(30,58,95,.12), 0 2px 8px rgba(30,58,95,.06);
+  --shad-h: 0 14px 44px rgba(30,58,95,.2);
+  --bord:   rgba(30,58,95,.14);
+  --sched-now: rgba(30,58,95,.1);
+}
+
+/* ════════════════════════════════════════════
+   BODY
+════════════════════════════════════════════ */
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════
+   LOGIN SCREEN
+════════════════════════════════════════════ */
+#loginScreen {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--grad);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 24px;
+  overflow: hidden;
+}
+
+/* floating petals */
+.petal {
+  position: absolute;
+  pointer-events: none;
+  font-size: 2rem;
+  opacity: 0;
+  animation: petalDrift linear infinite;
+}
+@keyframes petalDrift {
+  0%   { transform: translateY(110vh) rotate(0deg)   translateX(0);    opacity: 0; }
+  10%  { opacity: .35; }
+  90%  { opacity: .25; }
+  100% { transform: translateY(-10vh) rotate(360deg) translateX(40px);  opacity: 0; }
+}
+
+.login-glass {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 32px;
+  padding: 40px 32px 36px;
+  width: 100%; max-width: 400px;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  position: relative; z-index: 1;
+}
+
+.login-icon {
+  font-size: 3.2rem;
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.1rem;
+  font-style: italic;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.login-sub {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* version selector */
+.version-pills {
+  display: flex; gap: 10px; width: 100%;
+}
+.version-pill {
+  flex: 1; padding: 11px 8px; border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: transparent; color: rgba(255,255,255,0.8);
+  font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: all .25s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.version-pill span { font-size: 1.4rem; }
+.version-pill.active {
+  background: rgba(255,255,255,0.28);
+  border-color: #fff;
+  color: #fff;
+}
+
+.login-label {
+  align-self: flex-start;
+  font-size: 0.75rem; color: rgba(255,255,255,0.75);
+  letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+}
+
+.login-input {
+  width: 100%; padding: 14px 18px;
+  background: rgba(255,255,255,0.22);
+  border: 1.5px solid rgba(255,255,255,0.45);
+  border-radius: 14px; color: #fff;
+  font-size: 1rem; font-family: 'Nunito', sans-serif;
+  outline: none; transition: border-color .2s;
+}
+.login-input::placeholder { color: rgba(255,255,255,0.6); }
+.login-input:focus { border-color: rgba(255,255,255,0.85); }
+
+.login-btn {
+  width: 100%; padding: 15px;
+  background: rgba(255,255,255,0.95);
+  color: var(--p-dark, #8E3A56);
+  border: none; border-radius: var(--radius-btn);
+  font-size: 1rem; font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer; letter-spacing: 0.5px;
+  transition: all .25s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+
+.login-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  line-height: 1.6;
+  padding: 0 8px;
+}
+
+/* ════════════════════════════════════════════
+   INSTALL PROMPT
+════════════════════════════════════════════ */
+#installOverlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+#installOverlay[hidden] { display: none; }
+
+.install-card {
+  background: var(--card);
+  border-radius: 28px;
+  padding: 36px 28px;
+  max-width: 360px; width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+}
+.install-icon { font-size: 3rem; margin-bottom: 12px; }
+.install-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-style: italic;
+  color: var(--txt); margin-bottom: 8px;
+}
+.install-text {
+  font-size: 0.9rem; color: var(--muted);
+  line-height: 1.7; margin-bottom: 24px;
+}
+.install-btns { display: flex; flex-direction: column; gap: 10px; }
+.install-yes {
+  background: var(--grad); color: #fff;
+  border: none; border-radius: var(--radius-btn);
+  padding: 14px; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: opacity .2s;
+}
+.install-yes:hover { opacity: .88; }
+.install-no {
+  background: none; border: none;
+  color: var(--muted); font-size: 0.85rem;
+  cursor: pointer; padding: 8px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ════════════════════════════════════════════
+   APP LAYOUT
+════════════════════════════════════════════ */
+#app[hidden] { display: none; }
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--grad);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+}
+
+.header-top {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 10px;
+  gap: 12px;
+}
+
+.greeting-block { flex: 1; min-width: 0; }
+
+.greeting-hi {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-style: italic;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.2;
+}
+
+.greeting-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem; font-weight: 600;
+  color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+
+.save-indicator {
+  font-size: 0.72rem; color: rgba(255,255,255,0.85);
+  font-family: 'Nunito', sans-serif;
+  background: rgba(255,255,255,0.18);
+  border-radius: 20px; padding: 4px 10px;
+  opacity: 0; transition: opacity .4s;
+  white-space: nowrap;
+}
+.save-indicator.visible { opacity: 1; }
+
+.toggle-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 22px; padding: 6px 12px;
+  color: #fff; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: background .2s; white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.toggle-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex; padding: 0 16px;
+}
+.nav-tab {
+  flex: 1; text-align: center;
+  padding: 10px 4px 15px;
+  color: rgba(255,255,255,0.65);
+  font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+  transition: all .25s; user-select: none;
+}
+.nav-tab.active {
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,0.9);
+}
+
+/* ── DATE BAR ── */
+.date-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  background: var(--card);
+  border-bottom: 1px solid var(--bord);
+  box-shadow: 0 1px 0 var(--bord);
+}
+
+.date-nav {
+  background: none; border: none;
+  color: var(--p); font-size: 1.4rem;
+  cursor: pointer; padding: 4px 10px;
+  border-radius: 10px; transition: background .2s;
+}
+.date-nav:hover { background: var(--acc); }
+
+.date-center { text-align: center; flex: 1; }
+
+.date-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; color: var(--txt);
+  font-style: italic;
+}
+
+.date-sub {
+  display: block; font-size: 0.68rem;
+  color: var(--muted); font-family: 'Nunito', sans-serif;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  margin-top: 2px;
+}
+
+.today-btn {
+  background: var(--p); color: #fff;
+  border: none; border-radius: 20px;
+  padding: 6px 14px; font-size: 0.72rem;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-weight: 700; letter-spacing: 0.3px;
+  transition: opacity .2s;
+}
+.today-btn:hover { opacity: .85; }
+
+/* ── MAIN ── */
+.main {
+  padding: 20px 16px 100px;
+  max-width: 680px; margin: 0 auto;
+}
+
+/* ════════════════════════════════════════════
+   CARDS
+════════════════════════════════════════════ */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 22px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shad);
+  border: 1px solid var(--bord);
+  transition: box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: var(--grad);
+  border-radius: 4px 0 0 4px;
+}
+
+.card:hover { box-shadow: var(--shad-h); }
+
+.card-head {
+  display: flex; align-items: center;
+  gap: 12px; margin-bottom: 18px;
+}
+
+.card-ico {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--acc);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem;
+}
+
+[data-theme="masc"] .card-ico { background: var(--goldl); }
+
+.card-label {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--p); letter-spacing: 1.3px;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+}
+
+.badge {
+  margin-left: auto;
+  background: var(--acc); color: var(--p);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: 0.72rem; font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ════════════════════════════════════════════
+   QUOTE CARD
+════════════════════════════════════════════ */
+.quote-card {
+  background: var(--grad);
+  border-radius: var(--radius-card);
+  padding: 28px 24px 24px;
+  margin-bottom: 16px;
+  position: relative; overflow: hidden;
+}
+
+.quote-card::before {
+  content: '\201C';
+  position: absolute;
+  top: -20px; left: 12px;
+  font-size: 130px;
+  color: rgba(255,255,255,0.14);
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.quote-deco {
+  position: absolute; bottom: 10px; right: 16px;
+  font-size: 1.8rem; opacity: 0.18;
+  pointer-events: none;
+}
+
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 1.05rem;
+  color: #fff; line-height: 1.75;
+  position: relative; z-index: 1;
+}
+
+.quote-author {
+  font-size: 0.75rem; color: rgba(255,255,255,0.78);
+  margin-top: 14px; font-family: 'Nunito', sans-serif;
+  font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════════
+   INPUTS & TEXTAREAS
+════════════════════════════════════════════ */
+.field {
+  width: 100%;
+  border: 1.5px solid var(--acc2);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  color: var(--txt);
+  background: var(--bg);
+  font-family: 'Nunito', sans-serif;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field:focus {
+  border-color: var(--p);
+  box-shadow: 0 0 0 3px rgba(184,92,122,.12);
+}
+
+[data-theme="masc"] .field:focus {
+  box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+}
+
+textarea.field { min-height: 90px; }
+
+/* ════════════════════════════════════════════
+   TASKS
+════════════════════════════════════════════ */
+.task-row {
+  display: flex; gap: 8px; margin-bottom: 12px;
+}
+
+.task-row .field { flex: 1; resize: none; min-height: unset; padding: 10px 14px; }
+
+.add-btn {
+  background: var(--grad); color: #fff;
+  border: none; border-radius: 12px;
+  width: 42px; height: 42px;
+  font-size: 1.3rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: opacity .2s, transform .15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.add-btn:hover { opacity: .88; transform: scale(1.05); }
+
+.task-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--bord);
+  animation: slideIn .25s ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.task-item:last-child { border-bottom: none; }
+
+.task-check {
+  width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px;
+  border-radius: 50%; border: 2px solid var(--sec);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; transition: all .2s;
+}
+.task-check.done {
+  background: var(--p); border-color: var(--p); color: #fff;
+}
+
+[data-theme="fem"]  .task-check.done::after { content: '♥'; }
+[data-theme="masc"] .task-check.done::after { content: '✓'; }
+
+.task-txt {
+  flex: 1; font-size: 0.92rem; color: var(--txt); line-height: 1.5;
+}
+.task-txt.done { text-decoration: line-through; color: var(--muted); }
+
+.task-del {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; padding: 2px 6px; border-radius: 6px;
+  font-size: 1.1rem; transition: all .2s; line-height: 1;
+}
+.task-del:hover { background: #fee; color: #c33; }
+
+.empty-hint {
+  text-align: center; padding: 20px 12px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 0.9rem;
+  color: var(--muted); line-height: 1.7;
+}
+
+/* PROGRESS */
+.progress-wrap { margin-top: 16px; }
+.progress-labels {
+  display: flex; justify-content: space-between;
+  font-size: 0.72rem; color: var(--muted);
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 6px;
+}
+.progress-track {
+  height: 8px; background: var(--acc);
+  border-radius: 10px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--grad);
+  border-radius: 10px; transition: width .6s ease;
+}
+
+/* ════════════════════════════════════════════
+   MOOD
+════════════════════════════════════════════ */
+.mood-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.mood-btn {
+  background: var(--bg); border: 2px solid var(--acc2);
+  border-radius: 14px; padding: 10px 10px 8px;
+  cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  min-width: 58px;
+}
+.mood-btn span { font-size: 1.5rem; }
+.mood-btn small {
+  font-size: 0.62rem; color: var(--muted);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.mood-btn.sel {
+  border-color: var(--p);
+  background: var(--acc);
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(184,92,122,.2);
+}
+[data-theme="masc"] .mood-btn.sel {
+  box-shadow: 0 4px 14px rgba(30,58,95,.15);
+  background: var(--acc);
+}
+
+/* ════════════════════════════════════════════
+   WATER
+════════════════════════════════════════════ */
+.water-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.drop {
+  font-size: 1.6rem; cursor: pointer;
+  filter: grayscale(1); opacity: .3;
+  transition: all .2s;
+}
+.drop.on { filter: none; opacity: 1; transform: scale(1.1); }
+
+/* ════════════════════════════════════════════
+   SCHEDULE (30-MIN SLOTS)
+════════════════════════════════════════════ */
+.schedule-wrap {
+  max-height: 420px; overflow-y: auto;
+  border-radius: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--acc2) transparent;
+}
+
+.schedule-slot {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: background .2s;
+}
+.schedule-slot:hover { background: var(--acc); border-radius: 10px; }
+.schedule-slot.now {
+  background: var(--sched-now);
+  border-radius: 10px;
+}
+
+.slot-time {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--muted); font-family: 'Nunito', sans-serif;
+  min-width: 42px; letter-spacing: 0.3px;
+}
+.schedule-slot.now .slot-time { color: var(--p); }
+
+.slot-input {
+  flex: 1; border: none; background: transparent;
+  font-size: 0.88rem; color: var(--txt);
+  font-family: 'Nunito', sans-serif;
+  outline: none; padding: 5px 6px;
+  border-radius: 8px;
+}
+.slot-input:focus { background: var(--card); box-shadow: 0 0 0 2px var(--acc2); }
+
+.now-line {
+  width: 28px; height: 2px;
+  background: var(--p); border-radius: 2px;
+  flex-shrink: 0; opacity: .5;
+}
+
+/* ════════════════════════════════════════════
+   HABITS
+════════════════════════════════════════════ */
+.habit-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--bord);
+}
+.habit-row:last-child { border-bottom: none; }
+
+.habit-lbl { flex: 1; font-size: 0.9rem; color: var(--txt); }
+
+.habit-days { display: flex; gap: 4px; }
+
+.hday {
+  width: 30px; height: 30px; border-radius: 9px;
+  border: 1.5px solid var(--sec);
+  font-size: 0.62rem; font-family: 'Nunito', sans-serif;
+  font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); transition: all .2s; background: var(--bg);
+}
+.hday.ok { background: var(--p); border-color: var(--p); color: #fff; }
+
+/* ════════════════════════════════════════════
+   MONTH GRID
+════════════════════════════════════════════ */
+.month-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+
+.day-name {
+  text-align: center; font-size: 0.65rem; color: var(--muted);
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  text-transform: uppercase; padding: 4px 0; letter-spacing: 0.5px;
+}
+
+.mday {
+  aspect-ratio: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border-radius: 12px; font-size: 0.85rem;
+  cursor: pointer; transition: all .2s;
+  border: 1.5px solid transparent; background: var(--bg);
+  gap: 2px; font-family: 'Nunito', sans-serif; font-weight: 500;
+}
+.mday:hover { border-color: var(--sec); }
+.mday.today { background: var(--grad); color: #fff; font-weight: 700; border-color: transparent; }
+.mday.empty { opacity: 0; pointer-events: none; }
+.mday .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--sec); }
+.mday.today .dot { background: rgba(255,255,255,0.7); }
+
+/* ════════════════════════════════════════════
+   YEAR GRID
+════════════════════════════════════════════ */
+.year-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.ym-card {
+  background: var(--bg); border-radius: 16px;
+  padding: 14px 12px; cursor: pointer;
+  transition: all .2s; border: 1.5px solid transparent;
+}
+.ym-card:hover { border-color: var(--sec); }
+.ym-card.cur { border-color: var(--p); background: var(--acc); }
+
+.ym-name {
+  font-size: 0.82rem; color: var(--txt2);
+  font-family: 'Playfair Display', serif;
+  font-style: italic; margin-bottom: 8px;
+}
+
+.ym-mini { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
+
+.ymd {
+  aspect-ratio: 1; border-radius: 2px;
+  font-size: 0.48rem; display: flex;
+  align-items: center; justify-content: center;
+  color: var(--muted); font-family: 'Nunito', sans-serif;
+}
+.ymd.today { background: var(--p); color: #fff; border-radius: 3px; }
+.ymd.has  { background: var(--sec); opacity: .5; border-radius: 3px; }
+
+/* ════════════════════════════════════════════
+   WEEK VIEW
+════════════════════════════════════════════ */
+.week-pills {
+  display: flex; gap: 6px;
+  overflow-x: auto; padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.week-pills::-webkit-scrollbar { display: none; }
+
+.wpill {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 9px 10px; border-radius: 14px; cursor: pointer;
+  transition: all .2s; border: 1.5px solid transparent;
+  background: var(--bg); min-width: 50px;
+}
+.wpill .wn { font-size: 0.62rem; color: var(--muted); font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Nunito', sans-serif; }
+.wpill .wd { font-size: 1.15rem; font-weight: 700; font-family: 'Nunito', sans-serif; }
+.wpill .wt { font-size: 0.58rem; color: var(--muted); font-family: 'Nunito', sans-serif; }
+.wpill.today { background: var(--grad); color: #fff; }
+.wpill.today .wn, .wpill.today .wt { color: rgba(255,255,255,0.75); }
+
+/* ════════════════════════════════════════════
+   ORNAMENTAL DIVIDER
+════════════════════════════════════════════ */
+.orn {
+  text-align: center; color: var(--muted);
+  font-size: 0.85rem; letter-spacing: 8px;
+  margin: 4px 0 14px;
+  opacity: 0.5;
+}
+
+/* ════════════════════════════════════════════
+   SECTION MINI LABEL
+════════════════════════════════════════════ */
+.slbl {
+  font-size: 0.68rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1.3px;
+  font-family: 'Nunito', sans-serif; margin-bottom: 8px;
+}
+
+/* ════════════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.view { animation: fadeUp .35s ease; }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .main { padding: 14px 12px 90px; }
+  .year-grid { gap: 8px; }
+  .login-glass { padding: 32px 20px 28px; }
+}
+</style>
+</head>
+<body data-theme="fem">
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <!-- floating petals -->
+  <div class="petal" style="left:8%; animation-duration:7s; animation-delay:0s; font-size:1.8rem">🌸</div>
+  <div class="petal" style="left:22%; animation-duration:9s; animation-delay:1.5s; font-size:1.4rem">✿</div>
+  <div class="petal" style="left:40%; animation-duration:6s; animation-delay:0.8s; font-size:2rem">🌺</div>
+  <div class="petal" style="left:58%; animation-duration:8s; animation-delay:2s; font-size:1.5rem">🌷</div>
+  <div class="petal" style="left:75%; animation-duration:7.5s; animation-delay:0.3s; font-size:1.6rem">❀</div>
+  <div class="petal" style="left:90%; animation-duration:10s; animation-delay:1s; font-size:1.3rem">✦</div>
+
+  <div class="login-glass">
+    <div class="login-icon" id="loginIcon">🌸</div>
+    <div class="login-title" id="loginTitle">A Estrategista</div>
+    <div class="login-sub">Planner Filosófico</div>
+
+    <div class="login-label">Eu sou</div>
+    <div class="version-pills">
+      <button class="version-pill active" id="pillFem" onclick="selectVersion('fem')">
+        <span>🌸</span>A Estrategista
+      </button>
+      <button class="version-pill" id="pillMasc" onclick="selectVersion('masc')">
+        <span>⚡</span>O Estrategista
+      </button>
+    </div>
+
+    <div class="login-label">Como deseja ser chamada?</div>
+    <input class="login-input" id="nameInput" type="text"
+      placeholder="Seu nome aqui..."
+      maxlength="30"
+      onkeydown="if(event.key==='Enter')doLogin()">
+
+    <button class="login-btn" onclick="doLogin()">✦ Começar minha jornada ✦</button>
+
+    <div class="login-quote" id="loginQuote">
+      "A ordem é a forma mais alta de beleza.<br>E a beleza, a forma mais alta de sabedoria."
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     INSTALL PROMPT
+══════════════════════════════════════════ -->
+<div id="installOverlay" hidden>
+  <div class="install-card">
+    <div class="install-icon">📲</div>
+    <div class="install-title" id="installTitle">Instalar na tela inicial</div>
+    <div class="install-text">
+      Adicione <em>A Estrategista</em> à sua tela inicial e tenha seu planner sempre a um toque de distância — como um app nativo.
+    </div>
+    <div class="install-btns">
+      <button class="install-yes" onclick="doInstall()">✦ Sim, instalar como app ✦</button>
+      <button class="install-no" onclick="skipInstall()">Depois, obrigada</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP
+══════════════════════════════════════════ -->
+<div id="app" hidden>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="header-top">
+      <div class="greeting-block">
+        <div class="greeting-hi" id="greetingHi">Bom dia,</div>
+        <div class="greeting-name" id="greetingName">—</div>
+      </div>
+      <div class="header-actions">
+        <div class="save-indicator" id="saveIndicator">✓ Salvo</div>
+        <button class="toggle-btn" onclick="toggleVersion()" id="toggleBtn">⚡ Ele</button>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="setView('dia')">Dia</div>
+      <div class="nav-tab" onclick="setView('semana')">Semana</div>
+      <div class="nav-tab" onclick="setView('mes')">Mês</div>
+      <div class="nav-tab" onclick="setView('ano')">Ano</div>
+    </div>
+  </div>
+
+  <!-- DATE BAR -->
+  <div class="date-bar">
+    <button class="date-nav" onclick="nav(-1)">‹</button>
+    <div class="date-center">
+      <div class="date-main" id="dateMain">—</div>
+      <span class="date-sub" id="dateSub">—</span>
+    </div>
+    <button class="today-btn" onclick="goToday()">Hoje</button>
+    <button class="date-nav" onclick="nav(1)">›</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="main" id="mainContent"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCRIPT
+══════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── QUOTES ────────────────────────────────────────────────────────
+const QUOTES_FEM = [
+  { t:"A ordem é a forma mais alta de beleza. E a beleza, a forma mais elevada de sabedoria.", a:"Oscar Wilde, adapt." },
+  { t:"Ninguém nasce mulher: torna-se mulher. E tornar-se é o ato de criação mais nobre que existe.", a:"Simone de Beauvoir" },
+  { t:"Você não pode encontrar paz evitando a vida. Mas pode aprender a dançar no meio dela.", a:"Virginia Woolf" },
+  { t:"Eu sou minha própria musa. Sou o tema que melhor conheço — e ainda tenho tanto a descobrir.", a:"Frida Kahlo" },
+  { t:"Não temas a imperfeição. Teme apenas o silêncio da voz que poderia ter cantado.", a:"Clarice Lispector" },
+  { t:"Uma mente organizada é uma mente livre. Livre para sonhar, criar e transformar.", a:"Marie Curie, adapt." },
+  { t:"Ela é a tempestade e a calma. O caos e o método. E é nisso que reside todo seu poder.", a:"Nikita Gill" },
+  { t:"Não me arrependo das tempestades que enfrentei — foram elas que me ensinaram a navegar.", a:"Louisa May Alcott" },
+  { t:"A vida é ou uma aventura ousada ou coisa alguma. A estrategista escolhe a aventura.", a:"Helen Keller, adapt." },
+  { t:"A gratidão não é apenas a maior das virtudes — é a mãe de todas as outras.", a:"Cícero" },
+  { t:"Persiste. A grandeza raramente nasce da facilidade — nasce da teimosia diante do impossível.", a:"Maya Angelou" },
+  { t:"O coração tem razões que a própria razão desconhece. A estrategista ouve ambos.", a:"Blaise Pascal, adapt." },
+  { t:"A mulher que não precisa da aprovação de ninguém carrega em si a mais rara das liberdades.", a:"Mohadesa Najumi" },
+  { t:"Faz de cada dia uma obra de arte. Não necessariamente uma obra-prima — mas uma obra sua.", a:"John Ruskin, adapt." },
+  { t:"Toda grande jornada começa com a coragem de dar o primeiro passo — mesmo sem ver o caminho inteiro.", a:"Lao-Tsé, adapt." },
+  { t:"A disciplina é a ponte invisível entre os sonhos e a realidade construída.", a:"Jim Rohn" },
+  { t:"Seja a líder que você sempre desejou ter. O mundo precisa da sua versão mais inteira.", a:"Sheryl Sandberg, adapt." },
+  { t:"Planejar é amar o futuro com inteligência. É cuidar de si mesma antes mesmo de precisar.", a:"Anônima Sábia" },
+  { t:"O segredo não está em trabalhar mais — está em trabalhar com propósito e clareza.", a:"Brené Brown, adapt." },
+  { t:"Cuide da sua mente como cuida de um jardim: com atenção, paciência e muita intencionalidade.", a:"Ralph Waldo Emerson, adapt." },
+];
+
+const QUOTES_MASC = [
+  { t:"Dois inimigos te derrotam: o que está fora e o que está dentro. O segundo é sua única batalha real.", a:"Marco Aurélio" },
+  { t:"A ordem não é uma prisão — é a estrutura que liberta a mente para pensar com grandeza.", a:"Immanuel Kant, adapt." },
+  { t:"Não é a montanha que conquistamos, mas a nós mesmos. E isso exige método, não apenas coragem.", a:"Edmund Hillary" },
+  { t:"A felicidade da sua vida depende da qualidade dos seus pensamentos. Governe sua mente.", a:"Marco Aurélio" },
+  { t:"O homem sábio não se lamenta pelo que não tem — regozia-se com o que faz com o que possui.", a:"Epicteto" },
+  { t:"É preciso ter caos dentro de si para dar à luz uma estrela dançante. Mas é preciso também ordem.", a:"Friedrich Nietzsche" },
+  { t:"A primeira e mais nobre de todas as conquistas é a conquista de si mesmo — das próprias ações.", a:"Platão" },
+  { t:"Não há vento favorável para quem não sabe onde quer chegar. Defina seu destino.", a:"Sêneca" },
+  { t:"A grandeza de um homem está na profundidade do que compreende, não na magnitude do que conquista.", a:"Leonardo da Vinci, adapt." },
+  { t:"A disciplina é a ponte entre metas e realizações. Cruzá-la exige presença, não apenas inspiração.", a:"Jim Rohn" },
+  { t:"O homem que move montanhas começa carregando pequenas pedras. A consistência é o método.", a:"Confúcio" },
+  { t:"Viver bem é arte, não acidente. Requer estudo, prática e a coragem de refazer quando necessário.", a:"Aristóteles, adapt." },
+  { t:"O silêncio é o sono que nutre a sabedoria. Aprenda a habitá-lo com intenção e sem ansiedade.", a:"Francis Bacon" },
+  { t:"Cada dia é um discípulo da eternidade. Trate-o como tal — com reverência e propósito.", a:"Publius Syrus" },
+  { t:"Aquilo que não me mata me fortalece — desde que eu aprenda a lição que veio com o golpe.", a:"Friedrich Nietzsche" },
+  { t:"O estrategista não reage ao mundo. Ele o antecipa, planeja e age com precisão cirúrgica.", a:"Sun Tzu, adapt." },
+  { t:"Construa sua vida como um arquiteto constrói uma catedral: com visão, paciência e excelência.", a:"Antoine de Saint-Exupéry, adapt." },
+  { t:"Planejar é o mais elevado ato de respeito por si mesmo e por aqueles que dependem de você.", a:"Benjamin Franklin, adapt." },
+  { t:"O homem de ordem não desperdiça o único recurso que não se renova: o tempo.", a:"Peter Drucker, adapt." },
+  { t:"A liberdade real não é a ausência de regras — é a maestria sobre si mesmo. Isso é a estratégia.", a:"Epicteto, adapt." },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+let user = null;        // { name, version }
+let theme = 'fem';
+let view  = 'dia';
+let cur   = new Date();
+let deferredInstall = null;
+let saveTimer = null;
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const DAYS_S  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const DAYS_F  = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const MONTHS  = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function isToday(d) {
+  const t = new Date();
+  return d.getDate()===t.getDate() && d.getMonth()===t.getMonth() && d.getFullYear()===t.getFullYear();
+}
+
+function weekStart(d) {
+  const dt = new Date(d); dt.setDate(dt.getDate() - dt.getDay()); return dt;
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+// ── STORAGE ───────────────────────────────────────────────────────
+function sk(suffix) { return `est_${user.name}_${suffix}`; }
+
+function load(key, def=null) {
+  try { const v = localStorage.getItem(sk(key)); return v ? JSON.parse(v) : def; }
+  catch { return def; }
+}
+
+function save(key, val) {
+  try { localStorage.setItem(sk(key), JSON.stringify(val)); showSaved(); }
+  catch {}
+}
+
+function autoSave(key, val) {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => save(key, val), 500);
+  showSaved();
+}
+
+function showSaved() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.classList.add('visible');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('visible'), 2200);
+}
+
+// ── DATE KEYS ─────────────────────────────────────────────────────
+function dk(d)  { return `d${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+function wk(d)  { const ws=weekStart(d); return `w${ws.getFullYear()}-${ws.getMonth()+1}-${ws.getDate()}`; }
+function mk(d)  { return `m${d.getFullYear()}-${d.getMonth()+1}`; }
+function yk(d)  { return `y${d.getFullYear()}`; }
+
+// ── QUOTES ────────────────────────────────────────────────────────
+function getQuote(d, offset=0) {
+  const q = theme==='fem' ? QUOTES_FEM : QUOTES_MASC;
+  const seed = d.getDate() + d.getMonth()*31 + d.getFullYear()*365 + offset;
+  return q[Math.abs(seed) % q.length];
+}
+
+function quoteHtml(q, deco) {
+  return `<div class="quote-card">
+    <div class="quote-text">${q.t}</div>
+    <div class="quote-author">— ${q.a}</div>
+    <div class="quote-deco">${deco}</div>
+  </div>`;
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────
+function selectVersion(v) {
+  theme = v;
+  document.body.dataset.theme = v;
+  document.getElementById('pillFem').classList.toggle('active', v==='fem');
+  document.getElementById('pillMasc').classList.toggle('active', v==='masc');
+  const isFem = v==='fem';
+  document.getElementById('loginIcon').textContent  = isFem ? '🌸' : '⚡';
+  document.getElementById('loginTitle').textContent = isFem ? 'A Estrategista' : 'O Estrategista';
+  document.getElementById('nameInput').placeholder  = isFem ? 'Seu nome aqui...' : 'Seu nome aqui...';
+  document.getElementById('themeColorMeta').content = isFem ? '#B85C7A' : '#1E3A5F';
+  // update petals for masculine
+  const petals = document.querySelectorAll('.petal');
+  if (!isFem) {
+    const mascEmoji = ['⚡','✦','🌿','◆','✧','▲'];
+    petals.forEach((p,i) => p.textContent = mascEmoji[i % mascEmoji.length]);
+  } else {
+    const femEmoji = ['🌸','✿','🌺','🌷','❀','✦'];
+    petals.forEach((p,i) => p.textContent = femEmoji[i % femEmoji.length]);
+  }
+}
+
+function doLogin() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) {
+    document.getElementById('nameInput').style.borderColor = '#E57373';
+    document.getElementById('nameInput').focus();
+    setTimeout(() => document.getElementById('nameInput').style.borderColor = '', 1500);
+    return;
+  }
+  user = { name, version: theme };
+  localStorage.setItem('estrategista_lastUser', JSON.stringify(user));
+
+  document.getElementById('loginScreen').style.opacity = '0';
+  document.getElementById('loginScreen').style.transition = 'opacity .5s';
+  setTimeout(() => {
+    document.getElementById('loginScreen').style.display = 'none';
+    // show install prompt if available
+    if (deferredInstall) {
+      document.getElementById('installOverlay').hidden = false;
+      const isFem = theme==='fem';
+      document.getElementById('installTitle').textContent =
+        isFem ? 'Instalar na tela inicial' : 'Instalar como app';
+      document.querySelector('.install-text em').textContent =
+        isFem ? 'A Estrategista' : 'O Estrategista';
+      document.querySelector('.install-no').textContent =
+        isFem ? 'Depois, obrigada' : 'Depois, obrigado';
+    } else {
+      launchApp();
+    }
+  }, 500);
+}
+
+async function doInstall() {
+  document.getElementById('installOverlay').hidden = true;
+  if (deferredInstall) {
+    deferredInstall.prompt();
+    await deferredInstall.userChoice;
+    deferredInstall = null;
+  }
+  launchApp();
+}
+
+function skipInstall() {
+  document.getElementById('installOverlay').hidden = true;
+  launchApp();
+}
+
+function launchApp() {
+  document.getElementById('app').hidden = false;
+  updateGreeting();
+  updateDateBar();
+  render();
+}
+
+// ── TOGGLE VERSION ────────────────────────────────────────────────
+function toggleVersion() {
+  theme = theme==='fem' ? 'masc' : 'fem';
+  document.body.dataset.theme = theme;
+  user.version = theme;
+  localStorage.setItem('estrategista_lastUser', JSON.stringify(user));
+  updateGreeting();
+  document.getElementById('themeColorMeta').content = theme==='fem' ? '#B85C7A' : '#1E3A5F';
+  render();
+}
+
+// ── GREETING ─────────────────────────────────────────────────────
+function updateGreeting() {
+  const h = new Date().getHours();
+  const greet = h<12 ? 'Bom dia,' : h<18 ? 'Boa tarde,' : 'Boa noite,';
+  document.getElementById('greetingHi').textContent = greet;
+  document.getElementById('greetingName').textContent = user.name + ' ✦';
+  const isFem = theme==='fem';
+  document.getElementById('toggleBtn').textContent = isFem ? '⚡ Ele' : '🌸 Ela';
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+function setView(v) {
+  view = v;
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['dia','semana','mes','ano'][i]===v);
+  });
+  updateDateBar();
+  render();
+}
+
+function nav(dir) {
+  if (view==='dia')    cur.setDate(cur.getDate()+dir);
+  else if (view==='semana') cur.setDate(cur.getDate()+dir*7);
+  else if (view==='mes')    cur.setMonth(cur.getMonth()+dir);
+  else                      cur.setFullYear(cur.getFullYear()+dir);
+  cur = new Date(cur);
+  updateDateBar(); render();
+}
+
+function goToday() { cur = new Date(); updateDateBar(); render(); }
+
+function updateDateBar() {
+  const d = cur;
+  let main='', sub='';
+  if (view==='dia') {
+    main = `${d.getDate()} de ${MONTHS[d.getMonth()]}`;
+    sub  = `${DAYS_F[d.getDay()]} · ${d.getFullYear()}`;
+  } else if (view==='semana') {
+    const ws = weekStart(d);
+    const we = new Date(ws); we.setDate(ws.getDate()+6);
+    main = `${ws.getDate()} ${MONTHS[ws.getMonth()].slice(0,3)} — ${we.getDate()} ${MONTHS[we.getMonth()].slice(0,3)}`;
+    sub  = `Semana · ${d.getFullYear()}`;
+  } else if (view==='mes') {
+    main = MONTHS[d.getMonth()];
+    sub  = d.getFullYear().toString();
+  } else {
+    main = d.getFullYear().toString();
+    sub  = 'Visão Anual';
+  }
+  document.getElementById('dateMain').textContent = main;
+  document.getElementById('dateSub').textContent  = sub;
+}
+
+// ── RENDER DISPATCH ───────────────────────────────────────────────
+function render() {
+  const c = document.getElementById('mainContent');
+  if (view==='dia')    c.innerHTML = renderDia();
+  else if (view==='semana') c.innerHTML = renderSemana();
+  else if (view==='mes')    c.innerHTML = renderMes();
+  else                      c.innerHTML = renderAno();
+  afterRender();
+}
+
+// ── TASKS HTML ────────────────────────────────────────────────────
+function tasksHtml(key, placeholder) {
+  const tasks = load(key, []);
+  const done  = tasks.filter(t=>t.done).length;
+  const pct   = tasks.length ? Math.round(done/tasks.length*100) : 0;
+
+  const items = tasks.map((t,i) => `
+    <div class="task-item">
+      <div class="task-check ${t.done?'done':''}" onclick="toggleTask('${key}',${i})"></div>
+      <div class="task-txt ${t.done?'done':''}">${esc(t.text)}</div>
+      <button class="task-del" onclick="delTask('${key}',${i})">×</button>
+    </div>`).join('');
+
+  const progress = tasks.length ? `
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Progresso</span><span>${pct}%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>` : '';
+
+  const isFem = theme==='fem';
+  const hint = isFem
+    ? 'Nenhuma tarefa ainda.<br><em>Cada grande jornada começa com um primeiro passo...</em>'
+    : 'Nenhuma tarefa ainda.<br><em>A mente organizada conquista o que a impulsiva apenas deseja.</em>';
+
+  return `
+    <div class="task-row">
+      <input class="field" id="ti_${key}" placeholder="${placeholder}"
+        onkeydown="if(event.key==='Enter')addTask('${key}')">
+      <button class="add-btn" onclick="addTask('${key}')">+</button>
+    </div>
+    ${items || `<div class="empty-hint">${hint}</div>`}
+    ${progress}`;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── SCHEDULE HTML ─────────────────────────────────────────────────
+function scheduleHtml(key) {
+  const data = load(key, {});
+  const now  = new Date();
+  const nowSlot = `${pad(now.getHours())}:${now.getMinutes()<30?'00':'30'}`;
+
+  const slots = [];
+  for (let h=5; h<=23; h++) {
+    for (let m=0; m<60; m+=30) {
+      if (h===23 && m>30) break;
+      slots.push(`${pad(h)}:${pad(m)}`);
+    }
+  }
+
+  const rows = slots.map(slot => {
+    const isNow = isToday(cur) && slot===nowSlot;
+    return `<div class="schedule-slot ${isNow?'now':''}" id="slot_${slot.replace(':','_')}">
+      ${isNow ? '<div class="now-line"></div>' : ''}
+      <div class="slot-time">${slot}</div>
+      <input class="slot-input" data-skey="${key}" data-slot="${slot}"
+        value="${esc(data[slot]||'')}"
+        placeholder="${isNow?'▶ Agora':'...'}"
+        oninput="saveSlot(this)">
+    </div>`;
+  }).join('');
+
+  return `<div class="schedule-wrap" id="schedWrap">${rows}</div>`;
+}
+
+// ── MOOD HTML ─────────────────────────────────────────────────────
+function moodHtml(key) {
+  const sel = load(key+'_mood', '');
+  const isFem = theme==='fem';
+  const moods = isFem
+    ? [{e:'🌟',l:'Radiante'},{e:'😊',l:'Bem'},{e:'😌',l:'Calma'},{e:'🤔',l:'Pensando'},{e:'🌧️',l:'Difícil'}]
+    : [{e:'🔥',l:'Intenso'},{e:'💪',l:'Forte'},{e:'😎',l:'Focado'},{e:'🧘',l:'Sereno'},{e:'⛈️',l:'Tenso'}];
+  return moods.map(m => `
+    <button class="mood-btn ${sel===m.e?'sel':''}" onclick="setMood('${key}','${m.e}')">
+      <span>${m.e}</span><small>${m.l}</small>
+    </button>`).join('');
+}
+
+// ── WATER HTML ────────────────────────────────────────────────────
+function waterHtml(key) {
+  const n = load(key+'_water', 0);
+  return Array.from({length:8},(_,i)=>
+    `<span class="drop ${i<n?'on':''}" onclick="setWater('${key}',${i+1})">💧</span>`
+  ).join('');
+}
+
+// ── HABITS HTML ───────────────────────────────────────────────────
+function habitsHtml(wkKey) {
+  const isFem = theme==='fem';
+  const list = isFem
+    ? ['Meditação & Silêncio','Leitura','Movimento & Corpo','Gratidão','Aprendizado']
+    : ['Treino & Corpo','Leitura','Meditação','Disciplina financeira','Aprendizado'];
+
+  const ws = weekStart(cur);
+  const days = Array.from({length:7},(_,i)=>{
+    const d = new Date(ws); d.setDate(ws.getDate()+i); return d;
+  });
+
+  const data = load(wkKey+'_habits', {});
+
+  return list.map((h,hi) => {
+    const checks = days.map((d,di) => {
+      const k = `${hi}_${di}`;
+      return `<div class="hday ${data[k]?'ok':''}" onclick="toggleHabit('${wkKey}','${k}')">${DAYS_S[d.getDay()].charAt(0)}</div>`;
+    }).join('');
+    return `<div class="habit-row">
+      <div class="habit-lbl">${h}</div>
+      <div class="habit-days">${checks}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── VIEW: DIA ─────────────────────────────────────────────────────
+function renderDia() {
+  const d   = cur;
+  const key = dk(d);
+  const q   = getQuote(d);
+  const isFem = theme==='fem';
+
+  const intention  = load(key+'_int', '');
+  const reflection = load(key+'_ref', '');
+
+  return `<div class="view">
+    ${quoteHtml(q, isFem?'✿':'✦')}
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🌸':'⚡'}</div>
+        <div class="card-label">${isFem?'Intenção da Manhã':'Propósito do Dia'}</div>
+      </div>
+      <textarea class="field" placeholder="${isFem?'Minha intenção para este dia é...':'O que devo conquistar antes que o sol se ponha?'}"
+        oninput="autoSave('${key}_int',this.value)">${esc(intention)}</textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">🕐</div>
+        <div class="card-label">Agenda do Dia — 30 em 30 min</div>
+      </div>
+      ${scheduleHtml(key+'_sched')}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'✨':'🎯'}</div>
+        <div class="card-label">Tarefas do Dia</div>
+      </div>
+      ${tasksHtml(key+'_tasks', isFem?'Adicionar tarefa...':'Adicionar tarefa...')}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'💫':'🔥'}</div>
+        <div class="card-label">Como estou hoje?</div>
+      </div>
+      <div class="mood-row">${moodHtml(key)}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">💧</div>
+        <div class="card-label">Hidratação — ${load(key+'_water',0)}/8 copos</div>
+      </div>
+      <div class="water-row">${waterHtml(key)}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🌙':'🌊'}</div>
+        <div class="card-label">${isFem?'Reflexão da Noite & Gratidão':'Reflexão & Conquistas do Dia'}</div>
+      </div>
+      <div class="orn">✦ · ✦ · ✦</div>
+      <textarea class="field" style="min-height:110px"
+        placeholder="${isFem?'O que fez meu coração se expandir hoje? Pelo que sou grata?':'O que construí hoje? O que aprimorarei amanhã?'}"
+        oninput="autoSave('${key}_ref',this.value)">${esc(reflection)}</textarea>
+    </div>
+  </div>`;
+}
+
+// ── VIEW: SEMANA ──────────────────────────────────────────────────
+function renderSemana() {
+  const key   = wk(cur);
+  const ws    = weekStart(cur);
+  const q     = getQuote(cur, 5);
+  const isFem = theme==='fem';
+  const goals = load(key+'_goals','[]') || [];
+  const reflect = load(key+'_ref','') || '';
+
+  const days = Array.from({length:7},(_,i)=>{
+    const d = new Date(ws); d.setDate(ws.getDate()+i);
+    const tasks = load(dk(d)+'_tasks',[]) || [];
+    const done  = tasks.filter(t=>t.done).length;
+    return { d, tasks, done, isT: isToday(d) };
+  });
+
+  const pills = days.map(({d,tasks,done,isT}) => `
+    <div class="wpill ${isT?'today':''}">
+      <div class="wn">${DAYS_S[d.getDay()]}</div>
+      <div class="wd">${d.getDate()}</div>
+      ${tasks.length ? `<div class="wt">✓${done}/${tasks.length}</div>` : '<div class="wt">·</div>'}
+    </div>`).join('');
+
+  return `<div class="view">
+    ${quoteHtml(q, isFem?'❀':'✧')}
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🌸':'🗓️'}</div>
+        <div class="card-label">Panorama da Semana</div>
+      </div>
+      <div class="week-pills">${pills}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'✨':'⚡'}</div>
+        <div class="card-label">${isFem?'Intenções da Semana':'Metas da Semana'}</div>
+      </div>
+      ${tasksHtml(key+'_goals', isFem?'O que preciso cultivar esta semana?':'O que devo conquistar esta semana?')}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🦋':'💪'}</div>
+        <div class="card-label">Hábitos da Semana</div>
+      </div>
+      ${habitsHtml(key)}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'📖':'🧠'}</div>
+        <div class="card-label">${isFem?'Reflexão Semanal':'Balanço da Semana'}</div>
+      </div>
+      <div class="orn">✦ · ✦ · ✦</div>
+      <textarea class="field" style="min-height:100px"
+        placeholder="${isFem?'O que esta semana me ensinou? O que carrego de belo?':'O que construí? O que aprimorarei na próxima semana?'}"
+        oninput="autoSave('${key}_ref',this.value)">${esc(reflect)}</textarea>
+    </div>
+  </div>`;
+}
+
+// ── VIEW: MÊS ─────────────────────────────────────────────────────
+function renderMes() {
+  const key   = mk(cur);
+  const d     = cur;
+  const q     = getQuote(cur, 10);
+  const isFem = theme==='fem';
+
+  const firstDay    = new Date(d.getFullYear(), d.getMonth(), 1).getDay();
+  const daysInMonth = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+
+  const dayNames = DAYS_S.map(n=>`<div class="day-name">${n.charAt(0)}</div>`).join('');
+  const empties  = Array.from({length:firstDay},()=>`<div class="mday empty"></div>`).join('');
+  const cells    = Array.from({length:daysInMonth},(_,i)=>{
+    const day = i+1;
+    const dt  = new Date(d.getFullYear(), d.getMonth(), day);
+    const tasks = load(dk(dt)+'_tasks',[]) || [];
+    const isT   = isToday(dt);
+    return `<div class="mday ${isT?'today':''}">${day}${tasks.length?'<div class="dot"></div>':''}</div>`;
+  }).join('');
+
+  const wordVal    = esc(load(key+'_word','') || '');
+  const reflectVal = esc(load(key+'_ref','') || '');
+
+  return `<div class="view">
+    ${quoteHtml(q, isFem?'🌺':'🔱')}
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">📅</div>
+        <div class="card-label">${MONTHS[d.getMonth()]} ${d.getFullYear()}</div>
+      </div>
+      <div class="month-grid">${dayNames}${empties}${cells}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'💎':'🔑'}</div>
+        <div class="card-label">${isFem?'Palavra & Tema do Mês':'Palavra-Chave do Mês'}</div>
+      </div>
+      <input class="field" style="resize:none"
+        placeholder="${isFem?'Qual palavra guia este mês?':'Qual é o tema central deste mês?'}"
+        value="${wordVal}"
+        oninput="autoSave('${key}_word',this.value)">
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'✨':'🎯'}</div>
+        <div class="card-label">${isFem?'Intenções do Mês':'Metas do Mês'}</div>
+      </div>
+      ${tasksHtml(key+'_goals', isFem?'O que desejo cultivar este mês?':'O que devo construir este mês?')}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🌙':'🌊'}</div>
+        <div class="card-label">${isFem?'Conquistas & Gratidão':'Conquistas & Aprendizados'}</div>
+      </div>
+      <div class="orn">✦ · ✦ · ✦</div>
+      <textarea class="field" style="min-height:100px"
+        placeholder="${isFem?'O que este mês me revelou? Pelo que sou grata?':'O que este mês me forjou? O que conquistei?'}"
+        oninput="autoSave('${key}_ref',this.value)">${reflectVal}</textarea>
+    </div>
+  </div>`;
+}
+
+// ── VIEW: ANO ─────────────────────────────────────────────────────
+function renderAno() {
+  const key   = yk(cur);
+  const d     = cur;
+  const q     = getQuote(cur, 17);
+  const isFem = theme==='fem';
+
+  const monthCards = Array.from({length:12},(_,m) => {
+    const fd    = new Date(d.getFullYear(), m, 1).getDay();
+    const dim   = new Date(d.getFullYear(), m+1, 0).getDate();
+    const isCur = m===new Date().getMonth() && d.getFullYear()===new Date().getFullYear();
+
+    const mini = Array.from({length:fd},()=>`<div class="ymd"></div>`).join('')
+      + Array.from({length:dim},(_,i)=>{
+          const day = i+1;
+          const dt  = new Date(d.getFullYear(), m, day);
+          const has = (load(dk(dt)+'_tasks',[]) || []).length > 0;
+          return `<div class="ymd ${isToday(dt)?'today':has?'has':''}">${day}</div>`;
+        }).join('');
+
+    return `<div class="ym-card ${isCur?'cur':''}">
+      <div class="ym-name">${MONTHS[m]}</div>
+      <div class="ym-mini">${mini}</div>
+    </div>`;
+  }).join('');
+
+  const themeVal  = esc(load(key+'_theme','') || '');
+  const letterVal = esc(load(key+'_letter','') || '');
+
+  return `<div class="view">
+    ${quoteHtml(q, isFem?'🌷':'⚡')}
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'🌸':'🔱'}</div>
+        <div class="card-label">${isFem?'Tema do Ano':'Propósito do Ano'}</div>
+      </div>
+      <input class="field" style="resize:none"
+        placeholder="${isFem?'Uma palavra ou frase que define este ano...':'Uma palavra que governa este ano...'}"
+        value="${themeVal}"
+        oninput="autoSave('${key}_theme',this.value)">
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">🗓️</div>
+        <div class="card-label">${d.getFullYear()} — Panorama Anual</div>
+      </div>
+      <div class="year-grid">${monthCards}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'✨':'⚡'}</div>
+        <div class="card-label">${isFem?'Grandes Intenções do Ano':'Pilares do Ano'}</div>
+      </div>
+      ${tasksHtml(key+'_goals', isFem?'Uma grande intenção para este ano...':'Um pilar para construir este ano...')}
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico">${isFem?'📜':'📜'}</div>
+        <div class="card-label">${isFem?'Carta a Mim Mesma':'Manifesto do Ano'}</div>
+      </div>
+      <div class="orn">✦ · ✦ · ✦</div>
+      <textarea class="field" style="min-height:140px"
+        placeholder="${isFem?'Querida eu do futuro, este ano eu escolho...':'Este ano, comprometo-me a ser o homem que...'}"
+        oninput="autoSave('${key}_letter',this.value)">${letterVal}</textarea>
+    </div>
+  </div>`;
+}
+
+// ── AFTER RENDER ─────────────────────────────────────────────────
+function afterRender() {
+  // scroll schedule to current time
+  if (view==='dia' && isToday(cur)) {
+    setTimeout(() => {
+      const now = new Date();
+      const slot = `${pad(now.getHours())}_${now.getMinutes()<30?'00':'30'}`;
+      const el = document.getElementById('slot_'+slot);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 120);
+  }
+}
+
+// ── TASK ACTIONS ─────────────────────────────────────────────────
+function addTask(key) {
+  const inp = document.getElementById('ti_'+key);
+  if (!inp || !inp.value.trim()) return;
+  const tasks = load(key, []);
+  tasks.push({ text: inp.value.trim(), done: false });
+  save(key, tasks);
+  render();
+}
+
+function toggleTask(key, idx) {
+  const tasks = load(key, []);
+  tasks[idx].done = !tasks[idx].done;
+  save(key, tasks);
+  render();
+}
+
+function delTask(key, idx) {
+  const tasks = load(key, []);
+  tasks.splice(idx, 1);
+  save(key, tasks);
+  render();
+}
+
+// ── SCHEDULE SAVE ─────────────────────────────────────────────────
+function saveSlot(input) {
+  const key  = input.dataset.skey;
+  const slot = input.dataset.slot;
+  const data = load(key, {});
+  data[slot] = input.value;
+  autoSave(key, data);
+}
+
+// ── MOOD & WATER ─────────────────────────────────────────────────
+function setMood(key, emoji) { save(key+'_mood', emoji); render(); }
+function setWater(key, n)    { save(key+'_water', n);    render(); }
+
+// ── HABITS ───────────────────────────────────────────────────────
+function toggleHabit(wkKey, dayKey) {
+  const data = load(wkKey+'_habits', {});
+  data[dayKey] = !data[dayKey];
+  save(wkKey+'_habits', data);
+  render();
+}
+
+// ── PWA ──────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstall = e;
+  // if already logged in, show a floating install button
+  const existing = document.getElementById('installFab');
+  if (!existing && document.getElementById('app') && !document.getElementById('app').hidden) {
+    const fab = document.createElement('button');
+    fab.id = 'installFab';
+    fab.textContent = '📲 Instalar App';
+    fab.style.cssText = `position:fixed;bottom:24px;right:16px;z-index:200;
+      background:var(--grad);color:#fff;border:none;border-radius:30px;
+      padding:12px 20px;font-size:0.85rem;font-weight:700;cursor:pointer;
+      font-family:'Nunito',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,0.2);
+      animation:fadeUp .4s ease;`;
+    fab.onclick = () => { doInstall(); fab.remove(); };
+    document.body.appendChild(fab);
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstall = null;
+  const fab = document.getElementById('installFab');
+  if (fab) fab.remove();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+(function init() {
+  // check for returning user
+  const lastUser = localStorage.getItem('estrategista_lastUser');
+  if (lastUser) {
+    try {
+      user = JSON.parse(lastUser);
+      theme = user.version || 'fem';
+      document.body.dataset.theme = theme;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').hidden = false;
+      updateGreeting();
+      updateDateBar();
+      render();
+      return;
+    } catch {}
+  }
+  // fresh start — show login
+  document.body.dataset.theme = 'fem';
+})();
+</script>
+</body>
+</html>
