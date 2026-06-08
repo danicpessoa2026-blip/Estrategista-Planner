@@ -226,6 +226,128 @@ body {
 }
 #installOverlay[hidden] { display: none; }
 
+/* ════════════════════════════════════════════
+   TRIAL BANNER (dentro do app)
+════════════════════════════════════════════ */
+.trial-banner {
+  background: var(--grad);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.trial-banner-text {
+  color: rgba(255,255,255,0.92);
+  font-size: 0.78rem; font-family: 'Nunito', sans-serif;
+  font-weight: 600; letter-spacing: 0.3px;
+}
+.trial-banner-text strong { color: #fff; font-size: 0.88rem; }
+.trial-upgrade-btn {
+  background: rgba(255,255,255,0.95);
+  color: var(--p-dark, #8E3A56);
+  border: none; border-radius: 20px;
+  padding: 6px 16px; font-size: 0.78rem; font-weight: 800;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.3px; white-space: nowrap;
+  transition: transform .2s, box-shadow .2s;
+  text-decoration: none; display: inline-block;
+}
+.trial-upgrade-btn:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+
+/* ════════════════════════════════════════════
+   PAYWALL SCREEN
+════════════════════════════════════════════ */
+#paywallScreen {
+  position: fixed; inset: 0; z-index: 950;
+  background: var(--grad);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 20px; overflow-y: auto;
+}
+#paywallScreen[hidden] { display: none; }
+
+.paywall-glass {
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 32px;
+  padding: 40px 28px 36px;
+  width: 100%; max-width: 420px;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.paywall-icon { font-size: 3rem; animation: pulse 3s ease-in-out infinite; }
+
+.paywall-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem; font-style: italic;
+  color: #fff; line-height: 1.2;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.paywall-sub {
+  font-size: 0.82rem; color: rgba(255,255,255,0.85);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+}
+
+.paywall-expired-msg {
+  background: rgba(255,255,255,0.18);
+  border-radius: 14px; padding: 14px 18px;
+  color: #fff; font-size: 0.92rem; line-height: 1.6;
+  font-family: 'Nunito', sans-serif;
+  border: 1px solid rgba(255,255,255,0.25);
+  width: 100%;
+}
+.paywall-expired-msg strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+
+.paywall-benefits {
+  width: 100%; text-align: left;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.paywall-benefit {
+  display: flex; align-items: flex-start; gap: 10px;
+  color: rgba(255,255,255,0.92); font-size: 0.88rem;
+  font-family: 'Nunito', sans-serif; line-height: 1.5;
+}
+.paywall-benefit-ico {
+  font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;
+}
+
+.paywall-price {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; color: rgba(255,255,255,0.8);
+  font-size: 0.9rem; line-height: 1.6;
+}
+.paywall-price strong { color: #fff; font-size: 1.1rem; font-style: normal; }
+
+.paywall-wpp-btn {
+  width: 100%;
+  background: #25D366;
+  color: #fff; text-decoration: none;
+  border-radius: 50px; padding: 16px 20px;
+  font-size: 1rem; font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: all .25s; letter-spacing: 0.3px;
+  box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+}
+.paywall-wpp-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,211,102,0.5); }
+
+.paywall-ornament {
+  font-size: 0.9rem; color: rgba(255,255,255,0.5);
+  letter-spacing: 8px;
+}
+
+/* Petal animation for paywall */
+.paywall-petal {
+  position: absolute; pointer-events: none;
+  font-size: 1.8rem; opacity: 0;
+  animation: petalDrift linear infinite;
+}
+
 .install-card {
   background: var(--card);
   border-radius: 28px;
@@ -881,6 +1003,54 @@ textarea.field { min-height: 90px; }
 </div>
 
 <!-- ══════════════════════════════════════════
+     PAYWALL SCREEN
+══════════════════════════════════════════ -->
+<div id="paywallScreen" hidden>
+  <div class="paywall-petal" style="left:6%;animation-duration:7s;animation-delay:0s">🌸</div>
+  <div class="paywall-petal" style="left:25%;animation-duration:9s;animation-delay:1.5s;font-size:1.4rem">✿</div>
+  <div class="paywall-petal" style="left:55%;animation-duration:6s;animation-delay:0.8s">🌺</div>
+  <div class="paywall-petal" style="left:80%;animation-duration:8s;animation-delay:2s;font-size:1.3rem">❀</div>
+
+  <div class="paywall-glass">
+    <div class="paywall-icon" id="paywallIcon">🌸</div>
+    <div class="paywall-title" id="paywallTitle">A Estrategista</div>
+    <div class="paywall-sub">Planner Filosófico</div>
+
+    <div class="paywall-expired-msg">
+      <strong>✦ Sua avaliação gratuita encerrou</strong>
+      Você vivenciou 7 dias de organização, intenção e beleza. Agora é hora de tornar essa jornada permanente.
+    </div>
+
+    <div class="paywall-benefits">
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">♾️</div><div>Acesso <strong>vitalício</strong> — pague uma vez, use para sempre</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">🌸</div><div>Planner completo: Dia, Semana, Mês e Ano</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">📱</div><div>Instalável como app em celular, tablet e computador</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">💾</div><div>Salvamento automático em tempo real</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">🕐</div><div>Agenda de 30 em 30 minutos, do amanhecer ao anoitecer</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">✦</div><div>Citações filosóficas exclusivas — uma nova por dia</div></div>
+      <div class="paywall-benefit"><div class="paywall-benefit-ico">🌙</div><div>Versões feminina e masculina no mesmo app</div></div>
+    </div>
+
+    <div class="paywall-ornament">✦ · ✦ · ✦</div>
+
+    <div class="paywall-price">
+      Investimento único &amp; vitalício<br>
+      <strong id="paywallPriceLabel">🌸 A Estrategista — Acesso Vitalício</strong>
+    </div>
+
+    <a id="paywallWppBtn" class="paywall-wpp-btn"
+      href="#" target="_blank" rel="noopener">
+      <span>💬</span>
+      <span>Quero meu acesso vitalício</span>
+    </a>
+
+    <div class="paywall-ornament" style="font-size:0.75rem;letter-spacing:4px;margin-top:-4px">
+      via WhatsApp · resposta em minutos
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      APP
 ══════════════════════════════════════════ -->
 <div id="app" hidden>
@@ -904,6 +1074,9 @@ textarea.field { min-height: 90px; }
       <div class="nav-tab" onclick="setView('ano')">Ano</div>
     </div>
   </div>
+
+  <!-- TRIAL BANNER -->
+  <div id="trialBanner" style="display:none"></div>
 
   <!-- DATE BAR -->
   <div class="date-bar">
@@ -1115,10 +1288,15 @@ function skipInstall() {
 }
 
 function launchApp() {
+  // initialize trial on first login
+  getTrialInfo(user.name);
+  const { expired } = getTrialInfo(user.name);
+  if (expired) { showPaywall(); return; }
   document.getElementById('app').hidden = false;
   updateGreeting();
   updateDateBar();
   render();
+  checkTrial();
 }
 
 // ── TOGGLE VERSION ────────────────────────────────────────────────
@@ -1667,6 +1845,84 @@ window.addEventListener('appinstalled', () => {
   if (fab) fab.remove();
 });
 
+// ── TRIAL SYSTEM ─────────────────────────────────────────────────
+const TRIAL_DAYS = 7;
+const WPP_NUMBER = '5562991225961';
+
+function trialKey(name) { return `est_trial_${name}`; }
+
+function getTrialInfo(name) {
+  const raw = localStorage.getItem(trialKey(name));
+  let trial = raw ? JSON.parse(raw) : null;
+  if (!trial) {
+    trial = { start: Date.now() };
+    localStorage.setItem(trialKey(name), JSON.stringify(trial));
+  }
+  const elapsed   = Date.now() - trial.start;
+  const msDay     = 1000 * 60 * 60 * 24;
+  const daysUsed  = elapsed / msDay;
+  const daysLeft  = Math.max(0, Math.ceil(TRIAL_DAYS - daysUsed));
+  const expired   = daysUsed >= TRIAL_DAYS;
+  return { daysLeft, expired };
+}
+
+function wppLink(name, version) {
+  const label = version === 'masc' ? 'O Estrategista' : 'A Estrategista';
+  const msg = encodeURIComponent(
+    `Olá! 🌸 Quero adquirir o acesso vitalício do Planner *${label}*. Pode me ajudar?`
+  );
+  return `https://wa.me/${WPP_NUMBER}?text=${msg}`;
+}
+
+function showPaywall() {
+  const isFem = theme === 'fem';
+  document.getElementById('paywallIcon').textContent  = isFem ? '🌸' : '⚡';
+  document.getElementById('paywallTitle').textContent = isFem ? 'A Estrategista' : 'O Estrategista';
+  document.getElementById('paywallPriceLabel').textContent =
+    isFem ? '🌸 A Estrategista — Acesso Vitalício' : '⚡ O Estrategista — Acesso Vitalício';
+
+  // update petals for masculine
+  if (!isFem) {
+    document.querySelectorAll('.paywall-petal').forEach((p,i) => {
+      p.textContent = ['⚡','✦','🌿','◆'][i] || '✦';
+    });
+  }
+
+  document.getElementById('paywallWppBtn').href = wppLink(user.name, theme);
+  document.getElementById('app').hidden = true;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('paywallScreen').hidden = false;
+}
+
+function renderTrialBanner(daysLeft) {
+  const banner = document.getElementById('trialBanner');
+  if (!banner) return;
+  const isFem = theme === 'fem';
+  const emoji = isFem ? '🌸' : '⚡';
+  const link  = wppLink(user ? user.name : '', theme);
+  const plural = daysLeft === 1 ? 'dia' : 'dias';
+
+  banner.style.display = 'flex';
+  banner.className = 'trial-banner';
+  banner.innerHTML = `
+    <div class="trial-banner-text">
+      ${emoji} Avaliação gratuita: <strong>${daysLeft} ${plural} restante${daysLeft===1?'':'s'}</strong>
+    </div>
+    <a class="trial-upgrade-btn" href="${link}" target="_blank" rel="noopener">
+      ✦ Garantir acesso vitalício
+    </a>`;
+}
+
+function checkTrial() {
+  if (!user) return;
+  const { daysLeft, expired } = getTrialInfo(user.name);
+  if (expired) {
+    showPaywall();
+  } else {
+    renderTrialBanner(daysLeft);
+  }
+}
+
 // ── INIT ─────────────────────────────────────────────────────────
 (function init() {
   // check for returning user
@@ -1677,10 +1933,13 @@ window.addEventListener('appinstalled', () => {
       theme = user.version || 'fem';
       document.body.dataset.theme = theme;
       document.getElementById('loginScreen').style.display = 'none';
+      const { expired } = getTrialInfo(user.name);
+      if (expired) { showPaywall(); return; }
       document.getElementById('app').hidden = false;
       updateGreeting();
       updateDateBar();
       render();
+      checkTrial();
       return;
     } catch {}
   }
