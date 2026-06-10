@@ -98,19 +98,25 @@ body {
   overflow: hidden;
 }
 
-/* floating petals */
-.petal {
+/* ── PETAL PARTICLES ── */
+.petal-particle {
   position: absolute;
   pointer-events: none;
-  font-size: 2rem;
-  opacity: 0;
-  animation: petalDrift linear infinite;
+  user-select: none;
+  line-height: 1;
+  z-index: 0;
 }
-@keyframes petalDrift {
-  0%   { transform: translateY(110vh) rotate(0deg)   translateX(0);    opacity: 0; }
-  10%  { opacity: .35; }
-  90%  { opacity: .25; }
-  100% { transform: translateY(-10vh) rotate(360deg) translateX(40px);  opacity: 0; }
+#loginPetals {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden; z-index: 0;
+}
+#appPetals {
+  position: fixed; inset: 0;
+  pointer-events: none; overflow: hidden; z-index: 1;
+}
+#paywallPetals {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden; z-index: 0;
 }
 
 .login-glass {
@@ -924,6 +930,92 @@ textarea.field { min-height: 90px; }
 }
 
 /* ════════════════════════════════════════════
+   DECORATIVE ENHANCEMENTS
+════════════════════════════════════════════ */
+
+/* Subtle floral watermark on cards */
+[data-theme="fem"] .card::before {
+  content: '❀';
+  position: absolute; top: 10px; right: 16px;
+  font-size: 2rem; opacity: 0.055;
+  pointer-events: none; user-select: none;
+  line-height: 1;
+}
+[data-theme="masc"] .card::before {
+  content: '✦';
+  position: absolute; top: 10px; right: 16px;
+  font-size: 1.8rem; opacity: 0.055;
+  pointer-events: none; user-select: none;
+  line-height: 1;
+}
+
+/* Extra glow on quote card */
+[data-theme="fem"] .quote-card {
+  box-shadow: 0 8px 32px rgba(184,92,122,.35), 0 2px 12px rgba(184,92,122,.2);
+}
+[data-theme="masc"] .quote-card {
+  box-shadow: 0 8px 32px rgba(30,58,95,.35), 0 2px 12px rgba(30,58,95,.2);
+}
+
+/* Login icon glow */
+.login-icon {
+  filter: drop-shadow(0 0 18px rgba(255,255,255,0.6));
+}
+[data-theme="fem"] .login-icon  { font-size: 4rem; }
+[data-theme="masc"] .login-icon { font-size: 3.8rem; }
+
+/* Decorative dots around login glass */
+.login-glass::before {
+  content: '✦ · · ✦ · · ✦';
+  position: absolute; top: -28px;
+  left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.45);
+  font-size: 0.75rem; letter-spacing: 8px;
+  white-space: nowrap; pointer-events: none;
+}
+.login-glass::after {
+  content: '✦ · · ✦ · · ✦';
+  position: absolute; bottom: -26px;
+  left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.45);
+  font-size: 0.75rem; letter-spacing: 8px;
+  white-space: nowrap; pointer-events: none;
+}
+
+/* Soft floral body background */
+[data-theme="fem"] body {
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(184,92,122,.04) 0%, transparent 50%),
+    radial-gradient(circle at 85% 75%, rgba(232,160,181,.05) 0%, transparent 50%);
+}
+[data-theme="masc"] body {
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(30,58,95,.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 75%, rgba(46,107,158,.04) 0%, transparent 50%);
+}
+
+/* Card-head icon bigger and more decorative */
+.card-ico { font-size: 1.25rem; }
+
+/* Header ornament line */
+.app-header::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+/* Quote card extra floral deco */
+[data-theme="fem"] .quote-deco  { font-size: 2.2rem; opacity: 0.22; }
+[data-theme="masc"] .quote-deco { font-size: 2rem;   opacity: 0.18; }
+
+/* Prettier ornamental divider */
+.orn {
+  font-size: 1rem; letter-spacing: 10px;
+  opacity: 0.4;
+}
+
+/* ════════════════════════════════════════════
    ANIMATIONS
 ════════════════════════════════════════════ */
 @keyframes fadeUp {
@@ -948,13 +1040,7 @@ textarea.field { min-height: 90px; }
      LOGIN SCREEN
 ══════════════════════════════════════════ -->
 <div id="loginScreen">
-  <!-- floating petals -->
-  <div class="petal" style="left:8%; animation-duration:7s; animation-delay:0s; font-size:1.8rem">🌸</div>
-  <div class="petal" style="left:22%; animation-duration:9s; animation-delay:1.5s; font-size:1.4rem">✿</div>
-  <div class="petal" style="left:40%; animation-duration:6s; animation-delay:0.8s; font-size:2rem">🌺</div>
-  <div class="petal" style="left:58%; animation-duration:8s; animation-delay:2s; font-size:1.5rem">🌷</div>
-  <div class="petal" style="left:75%; animation-duration:7.5s; animation-delay:0.3s; font-size:1.6rem">❀</div>
-  <div class="petal" style="left:90%; animation-duration:10s; animation-delay:1s; font-size:1.3rem">✦</div>
+  <div id="loginPetals"></div>
 
   <div class="login-glass">
     <div class="login-icon" id="loginIcon">🌸</div>
@@ -1006,10 +1092,7 @@ textarea.field { min-height: 90px; }
      PAYWALL SCREEN
 ══════════════════════════════════════════ -->
 <div id="paywallScreen" hidden>
-  <div class="paywall-petal" style="left:6%;animation-duration:7s;animation-delay:0s">🌸</div>
-  <div class="paywall-petal" style="left:25%;animation-duration:9s;animation-delay:1.5s;font-size:1.4rem">✿</div>
-  <div class="paywall-petal" style="left:55%;animation-duration:6s;animation-delay:0.8s">🌺</div>
-  <div class="paywall-petal" style="left:80%;animation-duration:8s;animation-delay:2s;font-size:1.3rem">❀</div>
+  <div id="paywallPetals"></div>
 
   <div class="paywall-glass">
     <div class="paywall-icon" id="paywallIcon">🌸</div>
@@ -1049,6 +1132,9 @@ textarea.field { min-height: 90px; }
     </div>
   </div>
 </div>
+
+<!-- petal canvas for main app (fixed, full screen, behind content) -->
+<div id="appPetals" style="display:none"></div>
 
 <!-- ══════════════════════════════════════════
      APP
@@ -1098,6 +1184,49 @@ textarea.field { min-height: 90px; }
 ══════════════════════════════════════════ -->
 <script>
 'use strict';
+
+// ── PETAL SYSTEM ─────────────────────────────────────────────────
+const FEM_PETALS  = ['🌸','🌺','🌷','❀','✿','💮','🌼','🌹','🌸','🌷'];
+const MASC_PETALS = ['✦','✧','⭐','🍃','🍂','🍁','◆','✱','💫','🌿'];
+
+const _petalTimers = {};
+
+function spawnPetal(containerId, isFem) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const pool = isFem ? FEM_PETALS : MASC_PETALS;
+  const el = document.createElement('span');
+  el.className = 'petal-particle';
+  el.textContent = pool[Math.floor(Math.random() * pool.length)];
+  const size  = 0.7 + Math.random() * 1.6;
+  const left  = 1   + Math.random() * 96;
+  const dur   = (6  + Math.random() * 10) * 1000;
+  const swayX = (Math.random() - 0.5) * 200;
+  const rot   = Math.random() * 600 - 300;
+  const maxOp = 0.28 + Math.random() * 0.52;
+  el.style.cssText = `left:${left}%;top:-60px;font-size:${size}rem;`;
+  container.appendChild(el);
+  const anim = el.animate([
+    { transform:'translateY(0)    translateX(0)               rotate(0deg)',          opacity:0      },
+    { transform:`translateY(8vh)  translateX(${swayX*.2}px)   rotate(${rot*.15}deg)`, opacity:maxOp,   offset:.06 },
+    { transform:`translateY(50vh) translateX(${swayX*.55}px)  rotate(${rot*.5}deg)`,  opacity:maxOp*.75,offset:.5 },
+    { transform:`translateY(108vh) translateX(${swayX}px)     rotate(${rot}deg)`,    opacity:0      },
+  ], { duration:dur, easing:'linear', fill:'forwards' });
+  anim.onfinish = () => el.remove();
+}
+
+function startPetals(containerId, isFem) {
+  stopPetals(containerId);
+  const burst = 10;
+  for (let i = 0; i < burst; i++) setTimeout(() => spawnPetal(containerId, isFem), i * 280);
+  _petalTimers[containerId] = setInterval(() => spawnPetal(containerId, isFem), 850);
+}
+
+function stopPetals(containerId) {
+  if (_petalTimers[containerId]) { clearInterval(_petalTimers[containerId]); delete _petalTimers[containerId]; }
+  const c = document.getElementById(containerId);
+  if (c) c.querySelectorAll('.petal-particle').forEach(p => p.remove());
+}
 
 // ── QUOTES ────────────────────────────────────────────────────────
 const QUOTES_FEM = [
@@ -1230,15 +1359,7 @@ function selectVersion(v) {
   document.getElementById('loginTitle').textContent = isFem ? 'A Estrategista' : 'O Estrategista';
   document.getElementById('nameInput').placeholder  = isFem ? 'Seu nome aqui...' : 'Seu nome aqui...';
   document.getElementById('themeColorMeta').content = isFem ? '#B85C7A' : '#1E3A5F';
-  // update petals for masculine
-  const petals = document.querySelectorAll('.petal');
-  if (!isFem) {
-    const mascEmoji = ['⚡','✦','🌿','◆','✧','▲'];
-    petals.forEach((p,i) => p.textContent = mascEmoji[i % mascEmoji.length]);
-  } else {
-    const femEmoji = ['🌸','✿','🌺','🌷','❀','✦'];
-    petals.forEach((p,i) => p.textContent = femEmoji[i % femEmoji.length]);
-  }
+  startPetals('loginPetals', isFem);
 }
 
 function doLogin() {
@@ -1288,10 +1409,13 @@ function skipInstall() {
 }
 
 function launchApp() {
-  // initialize trial on first login
   getTrialInfo(user.name);
   const { expired } = getTrialInfo(user.name);
   if (expired) { showPaywall(); return; }
+  stopPetals('loginPetals');
+  const ap = document.getElementById('appPetals');
+  if (ap) ap.style.display = 'block';
+  startPetals('appPetals', theme === 'fem');
   document.getElementById('app').hidden = false;
   updateGreeting();
   updateDateBar();
@@ -1307,6 +1431,7 @@ function toggleVersion() {
   localStorage.setItem('estrategista_lastUser', JSON.stringify(user));
   updateGreeting();
   document.getElementById('themeColorMeta').content = theme==='fem' ? '#B85C7A' : '#1E3A5F';
+  startPetals('appPetals', theme === 'fem');
   render();
 }
 
@@ -1892,6 +2017,7 @@ function showPaywall() {
   document.getElementById('app').hidden = true;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('paywallScreen').hidden = false;
+  startPetals('paywallPetals', isFem);
 }
 
 function renderTrialBanner(daysLeft) {
@@ -1935,6 +2061,9 @@ function checkTrial() {
       document.getElementById('loginScreen').style.display = 'none';
       const { expired } = getTrialInfo(user.name);
       if (expired) { showPaywall(); return; }
+      const ap = document.getElementById('appPetals');
+      if (ap) ap.style.display = 'block';
+      startPetals('appPetals', theme === 'fem');
       document.getElementById('app').hidden = false;
       updateGreeting();
       updateDateBar();
@@ -1943,8 +2072,9 @@ function checkTrial() {
       return;
     } catch {}
   }
-  // fresh start — show login
+  // fresh start — show login with petals
   document.body.dataset.theme = 'fem';
+  startPetals('loginPetals', true);
 })();
 </script>
 </body>
